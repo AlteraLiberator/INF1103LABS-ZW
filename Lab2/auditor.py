@@ -20,6 +20,12 @@ while True:
             continue
 
         inventory += int(mainMenu)
+
+        # Check for inventory overflow
+        if inventory > 500:
+            print("Alert! Current inventory is above 500 units! Exiting...")
+            break
+
         print(f"Current inventory: {inventory}")
     else:
         print("Invalid input. Please enter a number or 'quit'.")
