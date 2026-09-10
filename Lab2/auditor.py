@@ -11,6 +11,14 @@ while True:
 
     # Check if the input is a valid number
     if mainMenu.isdigit():
+
+        # Check if the number is non-negative
+        if int(mainMenu) < 0:
+            print("Please enter a non-negative number.")
+            rejectedEntries += 1
+            # Re-prompt the user for input in next iteration of the loop
+            continue
+
         inventory += int(mainMenu)
         print(f"Current inventory: {inventory}")
     else:
