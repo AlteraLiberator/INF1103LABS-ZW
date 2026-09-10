@@ -11,14 +11,6 @@ while True:
 
     # Check if the input is a valid number
     if mainMenu.isdigit():
-
-        # Check if the number is non-negative
-        if int(mainMenu) < 0:
-            print("Please enter a non-negative number.")
-            rejectedEntries += 1
-            # Re-prompt the user for input in next iteration of the loop
-            continue
-
         inventory += int(mainMenu)
 
         # Check for inventory overflow
@@ -28,4 +20,10 @@ while True:
 
         print(f"Current inventory: {inventory}")
     else:
-        print("Invalid input. Please enter a number or 'quit'.")
+        rejectedEntries += 1
+
+        # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
+        print("Invalid input. Please enter a positive number or 'quit'.")
+
+# Final report (outside loop, when client quits program)
+print("Total Units Processed: {inv}\nNumber of Failed/Rejected Entries: {rejects}".format(inv = inventory, rejects = rejectedEntries))
