@@ -21,23 +21,23 @@ def get_valid_input():
 
         # Validate input
         if user_input == "quit":
-            return False
+            return (0, rejected_entries)
 
         # If user entered a non-positive number that isnt 'quit'
-        if not user_input.isDigit():
+        if not user_input.isdigit():
             # Add failed counter to global variable rejectedEntries
             rejected_entries += 1
 
             # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
             print("Invalid input. Please enter a positive number or 'quit'.")
-            pass
+            continue
 
         # If user entered 0
         if int(user_input) == 0:
             # Add failed counter to global variable rejectedEntries
             rejected_entries += 1
             print("Invalid input. Please enter a positive number or 'quit'.")
-            pass
+            continue
 
         # Return proper(This does break the loop)
         return (int(user_input), rejected_entries)
@@ -72,7 +72,7 @@ def generate_report(inventory_units, rejected_entries, successful_deliveries):
 
     # Initialise variables
     report = ""
-    report += "Final Session Report\n"
+    report += "\nFinal Session Report\n"
     report += "Total units in store: {}.\n".format(inventory_units)
     report += "Failed entry attempts: {}.\n".format(rejected_entries)
     report += "Successful deliveries: {}.\n".format(successful_deliveries)
@@ -93,20 +93,18 @@ def main():
         overflow_check = False
         current_delivery_tax = 0
 
-        user_input = get_valid_input()
-
-        # get_valid_input returned false (user entered quit)
-        if not user_input:
-            break
-
-        delivery_units, rejected_user_inputs = user_input
+        delivery_units, rejected_user_inputs = get_valid_input()
         total_failed_attempts += rejected_user_inputs
+
+        # get_valid_input first field returned 0 (user entered quit)
+        if not delivery_units:
+            break
 
         inventory, overflow_check = process_delivery(inventory, delivery_units)
         total_successful_deliveries += 1
 
         current_delivery_tax = calculate_tax(delivery_units)
-        print("Tax needed to be pain for this delivery: {}".format(current_delivery_tax))
+        print("Tax needed to be paid for this delivery: {}".format(current_delivery_tax))
 
         # Inventory has overflowed
         if overflow_check:
@@ -115,32 +113,6 @@ def main():
     # Print report when exiting application
     print(generate_report(inventory, total_failed_attempts, total_successful_deliveries))
 
-
-# Main Program Loop
-while True:
-    mainMenu = input("Enter stock quantity, or 'quit' to exit: ").lower()
-
-    # Exit the program if the user types 'quit'
-    if mainMenu == "quit":
-        break
-
-    # Check if the input is a valid number
-    if mainMenu.isdigit():
-        inventory += int(mainMenu)
-
-        # Check for inventory overflow
-        if inventory > 500:
-            print("Alert! Current inventory is above 500 units! Exiting...")
-            break
-
-        print(f"Current inventory: {inventory}")
-    else:
-        rejectedEntries += 1
-
-        # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
-        print("Invalid input. Please enter a positive number or 'quit'.")
-
-# Final report (outside loop, when client quits program)
-print("Total Units Processed: {inv}\nNumber of Failed/Rejected Entries: {rejects}".format(inv = inventory, rejects = rejectedEntries))
+main()
 
 
