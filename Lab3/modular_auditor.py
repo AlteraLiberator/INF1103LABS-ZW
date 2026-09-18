@@ -1,12 +1,15 @@
 # Initialising global constants
 INVENTORY_CAPACITY = 500
-TAX_RATE = 0.09
+TAX_RATE = 0.09     # 9% GST lul
+VALUE_PER_UNIT_ITEM = 120   # Has to have value to be taxed
 
 # Initialising global variables
 inventory = 0
 rejectedEntries = 0
 
 # Functions
+
+# Get user input
 def get_valid_input():
 
     user_input = ""
@@ -40,7 +43,7 @@ def get_valid_input():
         # Return proper(This does break the loop)
         return int(user_input)
 
-
+# Adds delivery to current inventory
 def process_delivery(current_total, new_value):
     # Initialise variables
     overflow = False
@@ -56,8 +59,14 @@ def process_delivery(current_total, new_value):
     # Return as tuple with overflow flag
     return (new_total, overflow)
 
-def calculate_tax():
-    pass
+# Calculates and returns the tax on the delivery
+def calculate_tax(delivery_amount):
+    # initialise variables
+    tax = 0
+
+    tax = delivery_amount * VALUE_PER_UNIT_ITEM * TAX_RATE
+
+    return tax
 
 def generate_report():
     pass
