@@ -1,3 +1,6 @@
+# Initialising global constants
+INVENTORY_CAPACITY = 500
+TAX_RATE = 0.09
 
 # Initialising global variables
 inventory = 0
@@ -16,10 +19,10 @@ def get_valid_input():
 
         # Validate input
         if user_input == "quit":
-            return user_input
+            return False
 
+        # If user entered a non-positive number that isnt 'quit'
         if not user_input.isDigit():
-
             # Add failed counter to global variable rejectedEntries
             rejectedEntries += 1
 
@@ -27,7 +30,14 @@ def get_valid_input():
             print("Invalid input. Please enter a positive number or 'quit'.")
             pass
 
-        # Return proper output (This does break the loop)
+        # If user entered 0
+        if int(user_input) == 0:
+            # Add failed counter to global variable rejectedEntries
+            rejectedEntries += 1
+            print("Invalid input. Please enter a positive number or 'quit'.")
+            pass
+
+        # Return proper(This does break the loop)
         return int(user_input)
 
 
