@@ -1,11 +1,35 @@
 
-# Initialising variables
+# Initialising global variables
 inventory = 0
 rejectedEntries = 0
 
 # Functions
 def get_valid_input():
-    pass
+
+    user_input = ""
+
+    # Mini while loop to ensure that we do not return invalid input
+    while True:
+
+        # Get user input
+        user_input = input("Enter stock quantity, or 'quit' to exit: ")
+
+        # Validate input
+        if user_input == "quit":
+            return user_input
+
+        if not user_input.isDigit():
+
+            # Add failed counter to global variable rejectedEntries
+            rejectedEntries += 1
+
+            # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
+            print("Invalid input. Please enter a positive number or 'quit'.")
+            pass
+
+        # Return proper output (This does break the loop)
+        return user_input
+
 
 def process_delivery():
     pass
