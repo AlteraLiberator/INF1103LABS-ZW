@@ -28,11 +28,23 @@ def get_valid_input():
             pass
 
         # Return proper output (This does break the loop)
-        return user_input
+        return int(user_input)
 
 
-def process_delivery():
-    pass
+def process_delivery(current_total, new_value):
+    # Initialise variables
+    overflow = False
+    new_total = 0
+
+    # Calculate the new total
+    new_total = current_total + new_value
+
+    # Check if overflow
+    if new_total > 500:
+        overflow = True
+
+    # Return as tuple with overflow flag
+    return (new_total, overflow)
 
 def calculate_tax():
     pass
