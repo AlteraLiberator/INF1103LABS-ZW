@@ -52,7 +52,7 @@ def process_delivery(current_total, new_value):
     new_total = current_total + new_value
 
     # Check if overflow
-    if new_total > 500:
+    if new_total > INVENTORY_CAPACITY:
         overflow = True
 
     # Return as tuple with overflow flag
@@ -68,36 +68,52 @@ def calculate_tax(delivery_amount):
     return tax
 
 # Generates the text string for the report (DOES NOT PRINT)
-def generate_report(inventory_units, rejected_entries):
+def generate_report(inventory_units, rejected_entries, successful_deliveries):
 
     # Initialise variables
     report = ""
     report += "Final Session Report\n"
     report += "Total units in store: {}.\n".format(inventory_units)
     report += "Failed entry attempts: {}.\n".format(rejected_entries)
+    report += "Successful deliveries: {}.\n".format(successful_deliveries)
 
     return report
 
 def main():
 
-    # Initialise variables
+    # Initialise "global" variables
     inventory = 0
     total_failed_attempts = 0
+    total_successful_deliveries = 0
 
     # Start of main loop
     while True:
+
+        # initialise internal variables
+        overflow_check = False
+        current_delivery_tax = 0
+
         user_input = get_valid_input()
 
         # get_valid_input returned false (user entered quit)
         if not user_input:
-            print(generate_report(inventory, total_failed_attempts))
             break
 
         delivery_units, rejected_user_inputs = user_input
         total_failed_attempts += rejected_user_inputs
 
-        process_delivery(inventory, delivery_units)
+        inventory, overflow_check = process_delivery(inventory, delivery_units)
+        total_successful_deliveries += 1
 
+        current_delivery_tax = calculate_tax(delivery_units)
+        print("Tax needed to be pain for this delivery: {}".format(current_delivery_tax))
+
+        # Inventory has overflowed
+        if overflow_check:
+            break
+
+    # Print report when exiting application
+    print(generate_report(inventory, total_failed_attempts, total_successful_deliveries))
 
 
 # Main Program Loop
