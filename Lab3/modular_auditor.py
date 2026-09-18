@@ -1,5 +1,21 @@
+
+# Initialising variables
 inventory = 0
 rejectedEntries = 0
+
+# Functions
+def get_valid_input():
+    pass
+
+def process_delivery():
+    pass
+
+def calculate_tax():
+    pass
+
+def generate_report():
+    pass
+
 
 # Main Program Loop
 while True:
@@ -27,3 +43,5 @@ while True:
 
 # Final report (outside loop, when client quits program)
 print("Total Units Processed: {inv}\nNumber of Failed/Rejected Entries: {rejects}".format(inv = inventory, rejects = rejectedEntries))
+
+
