@@ -38,6 +38,10 @@ def load_inventory():
 
     for line in data:
         inventory_item = line.split(",")
+        inventory_item[INVENTORY_ITEM_FORMAT["id"]] = int(inventory_item[INVENTORY_ITEM_FORMAT["id"]])
+        inventory_item[INVENTORY_ITEM_FORMAT["quantity"]] = int(inventory_item[INVENTORY_ITEM_FORMAT["quantity"]])
+        if len(inventory_item) < 4:
+            inventory_item.append(str(inventory_item[INVENTORY_ITEM_FORMAT["quantity"]]))
         inventory.append(inventory_item)
 
     # Return file contents as list of lists
@@ -50,7 +54,7 @@ def get_valid_input():
     # Initialise variables
     user_input_item_name = ""
     user_input_item_quantity = ""
-    item = []
+    item = ["", 0]
     rejected_entries = 0
 
     # Mini while loop to ensure that we do not return invalid input
@@ -89,7 +93,7 @@ def get_valid_input():
                 print("Invalid input. Please enter a positive number or 'quit'.")
                 continue
 
-            item[1] = user_input_item_quantity
+            item[1] = int(user_input_item_quantity)
 
             # Return resulting item
             return (item, rejected_entries, False)
@@ -105,9 +109,9 @@ def process_delivery(current_inventory, new_input):
     initial_id = 1
 
     for item in current_inventory:
-        exists_flag = True
         total_items += item[INVENTORY_ITEM_FORMAT["quantity"]]
         if new_input[0] == item[INVENTORY_ITEM_FORMAT["name"]]:
+            exists_flag = True
             item[INVENTORY_ITEM_FORMAT["quantity"]] += new_input[1]
             total_items += new_input[1]
             item[INVENTORY_ITEM_FORMAT["transaction_history"]] += f"|{new_input[1]}"
@@ -121,7 +125,7 @@ def process_delivery(current_inventory, new_input):
             new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
             current_inventory.append(new_item)
         else:
-            new_item = []
+            new_item = [0, "", 0, ""]
             new_item[INVENTORY_ITEM_FORMAT["id"]] = current_inventory[-1][INVENTORY_ITEM_FORMAT["id"]] + 1
             new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
             new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
@@ -130,6 +134,8 @@ def process_delivery(current_inventory, new_input):
 
     if total_items > INVENTORY_CAPACITY:
         overflow = True
+
+    print(current_inventory)
 
     # Return inventory
     return (current_inventory, overflow)
@@ -144,12 +150,18 @@ def calculate_tax(delivery_amount):
     return tax
 
 # Generates the text string for the report (DOES NOT PRINT)
-def generate_report(inventory_units, rejected_entries, successful_deliveries):
+def generate_report(inventory, rejected_entries, successful_deliveries):
 
     # Initialise variables
     report = ""
     report += "\nFinal Session Report\n"
-    report += "Total units in store: {}.\n".format(inventory_units)
+    print(inventory)
+    if len(inventory) != 0:
+        for item in inventory:
+            print(item)
+            report += f"Item ID: {item[INVENTORY_ITEM_FORMAT['id']]},Item Name: {item[INVENTORY_ITEM_FORMAT['name']]}, Item Quantity: {item[INVENTORY_ITEM_FORMAT['quantity']]}, Item Transaction History: {item[INVENTORY_ITEM_FORMAT['transaction_history']]}\n"
+    else:
+        report += "No items in store.\n"
     report += "Failed entry attempts: {}.\n".format(rejected_entries)
     report += "Successful deliveries: {}.\n".format(successful_deliveries)
 
@@ -160,10 +172,10 @@ def generate_report(inventory_units, rejected_entries, successful_deliveries):
 def main():
 
     # Initialise "global" variables
-    inventory = []
     inventory_item = []
     total_failed_attempts = 0
     total_successful_deliveries = 0
+    inventory = load_inventory()
 
     # Start of main loop
     while True:
@@ -171,8 +183,6 @@ def main():
         # initialise internal variables
         overflow_check = False
         current_delivery_tax = 0
-
-        inventory = load_inventory()
 
         inventory_item, rejected_user_inputs, exit_flag = get_valid_input()
         total_failed_attempts += rejected_user_inputs
@@ -184,7 +194,7 @@ def main():
         inventory, overflow_check = process_delivery(inventory, inventory_item)
         total_successful_deliveries += 1
 
-        current_delivery_tax = calculate_tax(inventory_item)
+        current_delivery_tax = calculate_tax(inventory_item[1])
         print("Tax needed to be paid for this delivery: {}".format(current_delivery_tax))
 
         # Inventory has overflowed
