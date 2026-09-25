@@ -12,10 +12,19 @@ TAX_RATE = 0.09     # 9% GST lul
 VALUE_PER_UNIT_ITEM = 120   # Has to have value to be taxed
 
 
+INVENTORY_ITEM_FORMAT = {
+    "id":0,
+    "name":1,
+    "quantity":2,
+    "transaction_history":3
+}
+
+TRANSACTION_HISTORY_LIMITER = "|"
+
 # Functions
 
 # Data logic
-def get_inventory():
+def load_inventory():
 
     inventory = []
 
@@ -39,37 +48,52 @@ def get_inventory():
 def get_valid_input():
 
     # Initialise variables
-    user_input = ""
+    user_input_item_name = ""
+    user_input_item_quantity = ""
+    item = []
     rejected_entries = 0
 
     # Mini while loop to ensure that we do not return invalid input
+    
     while True:
+        # Get item name
+        user_input_item_name = input("Enter item name, or 'quit' to exit: ")
 
-        # Get user input
-        user_input = input("Enter stock quantity, or 'quit' to exit: ")
+            # Validate input
+        if user_input_item_name == "quit":
+            return ([], rejected_entries, True)
 
-        # Validate input
-        if user_input == "quit":
-            return (0, rejected_entries)
+        item[0] = user_input_item_name
+        
+        while True:
+            # Get item quantity
+            user_input_item_quantity = input("Enter item stock quantity, or 'c' to re-enter item name: ")
 
-        # If user entered a non-positive number that isnt 'quit'
-        if not user_input.isdigit():
-            # Add failed counter to global variable rejectedEntries
-            rejected_entries += 1
+            # Validate input
+            if user_input_item_name == "c":
+                break
 
-            # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
-            print("Invalid input. Please enter a positive number or 'quit'.")
-            continue
+            # If user entered a non-positive number that isnt 'c'
+            if not user_input_item_quantity.isdigit():
+                # Add failed counter to global variable rejectedEntries
+                rejected_entries += 1
 
-        # If user entered 0
-        if int(user_input) == 0:
-            # Add failed counter to global variable rejectedEntries
-            rejected_entries += 1
-            print("Invalid input. Please enter a positive number or 'quit'.")
-            continue
+                # Note isdigit() will not count -ve numbers input as number as "-1".isdigit() will count the "-" as a non digit character, thus failing the check
+                print("Invalid input. Please enter a positive number or 'c'.")
+                continue
 
-        # Return proper(This does break the loop)
-        return (int(user_input), rejected_entries)
+            # If user entered 0
+            if int(user_input_item_quantity) == 0:
+                # Add failed counter to global variable rejectedEntries
+                rejected_entries += 1
+                print("Invalid input. Please enter a positive number or 'quit'.")
+                continue
+
+            item[1] = user_input_item_quantity
+
+            # Return resulting item
+            return (item, rejected_entries, False)
+
 
 # Adds delivery to current inventory (returns new total)
 def process_delivery(current_total, new_value):
@@ -113,7 +137,7 @@ def generate_report(inventory_units, rejected_entries, successful_deliveries):
 def main():
 
     # Initialise "global" variables
-    inventory = 0
+    inventory = []
     total_failed_attempts = 0
     total_successful_deliveries = 0
 
@@ -124,7 +148,7 @@ def main():
         overflow_check = False
         current_delivery_tax = 0
 
-        print(get_inventory())
+        inventory = load_inventory()
 
         delivery_units, rejected_user_inputs = get_valid_input()
         total_failed_attempts += rejected_user_inputs
