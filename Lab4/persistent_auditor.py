@@ -1,3 +1,11 @@
+# Imports
+from pathlib import Path
+
+# Get current directory
+current_directory = Path(__file__).parent
+
+INVENTORY_FILE = current_directory / "inventory.txt"
+
 # Initialising global constants
 INVENTORY_CAPACITY = 500
 TAX_RATE = 0.09     # 9% GST lul
@@ -9,11 +17,22 @@ VALUE_PER_UNIT_ITEM = 120   # Has to have value to be taxed
 # Data logic
 def get_inventory():
 
+    inventory = []
+
     # Open file
+    try:
+        data = open(INVENTORY_FILE, "r")
+    except FileNotFoundError:
+        data = open(INVENTORY_FILE, "x")
+        data.close()
+        return []
 
-    # Return file contents as list with tuples
+    for line in data:
+        inventory_item = line.split(",")
+        inventory.append(inventory_item)
 
-    pass
+    # Return file contents as list of lists
+    return inventory
 
 # Business logic
 # Get user input (Returns either boolean or tuple)
@@ -104,6 +123,8 @@ def main():
         # initialise internal variables
         overflow_check = False
         current_delivery_tax = 0
+
+        print(get_inventory())
 
         delivery_units, rejected_user_inputs = get_valid_input()
         total_failed_attempts += rejected_user_inputs
