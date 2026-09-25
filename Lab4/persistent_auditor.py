@@ -6,6 +6,16 @@ VALUE_PER_UNIT_ITEM = 120   # Has to have value to be taxed
 
 # Functions
 
+# Data logic
+def get_inventory():
+
+    # Open file
+
+    # Return file contents as list with tuples
+
+    pass
+
+# Business logic
 # Get user input (Returns either boolean or tuple)
 def get_valid_input():
 
@@ -79,6 +89,8 @@ def generate_report(inventory_units, rejected_entries, successful_deliveries):
 
     return report
 
+
+# Main program logic
 def main():
 
     # Initialise "global" variables
