@@ -74,7 +74,7 @@ def get_valid_input():
             user_input_item_quantity = input("Enter item stock quantity, or 'c' to re-enter item name: ")
 
             # Validate input
-            if user_input_item_name == "c":
+            if user_input_item_quantity == "c":
                 break
 
             # If user entered a non-positive number that isnt 'c'
@@ -103,10 +103,8 @@ def get_valid_input():
 def process_delivery(current_inventory, new_input):
     # Initialise variables
     overflow = False
-    new_total = 0
     exists_flag = False
     total_items = 0
-    initial_id = 1
 
     for item in current_inventory:
         total_items += item[INVENTORY_ITEM_FORMAT["quantity"]]
@@ -117,25 +115,21 @@ def process_delivery(current_inventory, new_input):
             item[INVENTORY_ITEM_FORMAT["transaction_history"]] += f"|{new_input[1]}"
 
     if not exists_flag:
+        new_item = [0, "", 0, ""]
+        
         if len(current_inventory) == 0:
-            new_item = []
             new_item[INVENTORY_ITEM_FORMAT["id"]] = 1
-            new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
-            new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
-            new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
-            current_inventory.append(new_item)
         else:
-            new_item = [0, "", 0, ""]
             new_item[INVENTORY_ITEM_FORMAT["id"]] = current_inventory[-1][INVENTORY_ITEM_FORMAT["id"]] + 1
-            new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
-            new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
-            new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
-            current_inventory.append(new_item)
+
+        new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
+        new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
+        new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
+        current_inventory.append(new_item)
+        total_items += new_item[INVENTORY_ITEM_FORMAT["quantity"]]
 
     if total_items > INVENTORY_CAPACITY:
         overflow = True
-
-    print(current_inventory)
 
     # Return inventory
     return (current_inventory, overflow)
@@ -155,11 +149,9 @@ def generate_report(inventory, rejected_entries, successful_deliveries):
     # Initialise variables
     report = ""
     report += "\nFinal Session Report\n"
-    print(inventory)
     if len(inventory) != 0:
         for item in inventory:
-            print(item)
-            report += f"Item ID: {item[INVENTORY_ITEM_FORMAT['id']]},Item Name: {item[INVENTORY_ITEM_FORMAT['name']]}, Item Quantity: {item[INVENTORY_ITEM_FORMAT['quantity']]}, Item Transaction History: {item[INVENTORY_ITEM_FORMAT['transaction_history']]}\n"
+            report += f"Item ID: {item[INVENTORY_ITEM_FORMAT['id']]}, Item Name: {item[INVENTORY_ITEM_FORMAT['name']]}, Item Quantity: {item[INVENTORY_ITEM_FORMAT['quantity']]}, Item Transaction History: {item[INVENTORY_ITEM_FORMAT['transaction_history']]}\n"
     else:
         report += "No items in store.\n"
     report += "Failed entry attempts: {}.\n".format(rejected_entries)
@@ -199,6 +191,7 @@ def main():
 
         # Inventory has overflowed
         if overflow_check:
+            print("Items in inventory greater then capacity! Exiting...")
             break
 
     # Print report when exiting application
