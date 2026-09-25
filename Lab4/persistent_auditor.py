@@ -96,20 +96,43 @@ def get_valid_input():
 
 
 # Adds delivery to current inventory (returns new total)
-def process_delivery(current_total, new_value):
+def process_delivery(current_inventory, new_input):
     # Initialise variables
     overflow = False
     new_total = 0
+    exists_flag = False
+    total_items = 0
+    initial_id = 1
 
-    # Calculate the new total
-    new_total = current_total + new_value
+    for item in current_inventory:
+        exists_flag = True
+        total_items += item[INVENTORY_ITEM_FORMAT["quantity"]]
+        if new_input[0] == item[INVENTORY_ITEM_FORMAT["name"]]:
+            item[INVENTORY_ITEM_FORMAT["quantity"]] += new_input[1]
+            total_items += new_input[1]
+            item[INVENTORY_ITEM_FORMAT["transaction_history"]] += f"|{new_input[1]}"
 
-    # Check if overflow
-    if new_total > INVENTORY_CAPACITY:
+    if not exists_flag:
+        if len(current_inventory) == 0:
+            new_item = []
+            new_item[INVENTORY_ITEM_FORMAT["id"]] = 1
+            new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
+            new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
+            new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
+            current_inventory.append(new_item)
+        else:
+            new_item = []
+            new_item[INVENTORY_ITEM_FORMAT["id"]] = current_inventory[-1][INVENTORY_ITEM_FORMAT["id"]] + 1
+            new_item[INVENTORY_ITEM_FORMAT["name"]] = new_input[0]
+            new_item[INVENTORY_ITEM_FORMAT["quantity"]] = new_input[1]
+            new_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = f"{new_input[1]}"
+            current_inventory.append(new_item)
+
+    if total_items > INVENTORY_CAPACITY:
         overflow = True
 
-    # Return as tuple with overflow flag
-    return (new_total, overflow)
+    # Return inventory
+    return (current_inventory, overflow)
 
 # Calculates and returns the tax on the delivery
 def calculate_tax(delivery_amount):
@@ -161,7 +184,7 @@ def main():
         inventory, overflow_check = process_delivery(inventory, inventory_item)
         total_successful_deliveries += 1
 
-        current_delivery_tax = calculate_tax(delivery_units)
+        current_delivery_tax = calculate_tax(inventory_item)
         print("Tax needed to be paid for this delivery: {}".format(current_delivery_tax))
 
         # Inventory has overflowed
