@@ -138,6 +138,7 @@ def main():
 
     # Initialise "global" variables
     inventory = []
+    inventory_item = []
     total_failed_attempts = 0
     total_successful_deliveries = 0
 
@@ -150,14 +151,14 @@ def main():
 
         inventory = load_inventory()
 
-        delivery_units, rejected_user_inputs = get_valid_input()
+        inventory_item, rejected_user_inputs, exit_flag = get_valid_input()
         total_failed_attempts += rejected_user_inputs
 
         # get_valid_input first field returned 0 (user entered quit)
-        if not delivery_units:
+        if exit_flag:
             break
 
-        inventory, overflow_check = process_delivery(inventory, delivery_units)
+        inventory, overflow_check = process_delivery(inventory, inventory_item)
         total_successful_deliveries += 1
 
         current_delivery_tax = calculate_tax(delivery_units)
