@@ -42,10 +42,24 @@ def load_inventory():
         inventory_item[INVENTORY_ITEM_FORMAT["quantity"]] = int(inventory_item[INVENTORY_ITEM_FORMAT["quantity"]])
         if len(inventory_item) < 4:
             inventory_item.append(str(inventory_item[INVENTORY_ITEM_FORMAT["quantity"]]))
+        else:
+            inventory_item[INVENTORY_ITEM_FORMAT["transaction_history"]] = inventory_item[INVENTORY_ITEM_FORMAT["transaction_history"]].replace("\n", "")
         inventory.append(inventory_item)
 
     # Return file contents as list of lists
     return inventory
+
+def save_inventory(inventory):
+
+    save_file_string = ""
+    for item in inventory:
+        save_file_string += f"{item[INVENTORY_ITEM_FORMAT['id']]},{item[INVENTORY_ITEM_FORMAT['name']]},{item[INVENTORY_ITEM_FORMAT['quantity']]},{item[INVENTORY_ITEM_FORMAT['transaction_history']]}\n"
+
+    with open(INVENTORY_FILE, "w") as file:
+        file.write(save_file_string)
+
+    file.close()
+
 
 # Business logic
 # Get user input (Returns either boolean or tuple)
@@ -131,6 +145,8 @@ def process_delivery(current_inventory, new_input):
     if total_items > INVENTORY_CAPACITY:
         overflow = True
 
+    print(current_inventory)
+
     # Return inventory
     return (current_inventory, overflow)
 
@@ -193,6 +209,9 @@ def main():
         if overflow_check:
             print("Items in inventory greater then capacity! Exiting...")
             break
+
+    # Save file when exiting application
+    save_inventory(inventory)
 
     # Print report when exiting application
     print(generate_report(inventory, total_failed_attempts, total_successful_deliveries))
