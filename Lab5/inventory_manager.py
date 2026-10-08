@@ -41,6 +41,43 @@ def main():
 
     # Get Inventory
     inventory = get_inventory(inventory)
+    
+    while True:
+        
+        # Print options menu
+        print(("-"*7) + "MENU" + ("-"*7))
+        print("""
+              1. Display all products
+              2. Add product
+              3. Update stock
+              4. Search product
+              5. Save Inventory
+              6. Exit (Autosaves)
+              """)
+        print("-"*18 + "\n")
+        
+        user_input = input("Enter option: ")
+        
+        while not user_input.isdigit():
+            user_input = input("Invalid entry, try again: ")
+        
+        match int(user_input):
+            case 1:
+                pass
+            case 2: 
+                pass
+            case 3:
+                pass
+            case 4:
+                pass
+            case 5:
+                pass
+            case 6:
+                break
+            case _: # Default case
+                print("No matching option found, returning to menu")
+        
+        
 
     return 0
 
