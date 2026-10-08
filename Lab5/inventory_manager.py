@@ -8,6 +8,13 @@ current_directory = Path(__file__).parent
 INVENTORY_FILE = current_directory / "inventory.json"
 
 
+# Option for user to exit current function
+def exit_flag(data):
+    if data == "-1":
+        return True
+    return False
+
+
 # Inventory functions
 def get_inventory(default):
 
@@ -42,11 +49,6 @@ def display_product(inventory):
 
 
 def add_product(inventory):
-
-    def exit_flag(data):
-        if data == "-1":
-            return True
-        return False
 
     item = {"ID": "", "Name": "", "Price": 0, "Stock": 0}
 
@@ -102,10 +104,35 @@ def add_product(inventory):
             # To exit outer loop if user entered 0 from the stock loop
             if exit_flag(user_input):
                 break
-            
+
             inventory["items"].append(item)
             break
 
+    return inventory
+
+
+def update_product_stock(inventory):
+
+    user_input = input("Enter product ID or -1 to exit: ")
+    exists_flag = False
+    
+    if exit_flag(user_input):
+        return inventory
+    
+    for items in inventory["items"]:
+        if items["ID"] == user_input:
+            exists_flag = True
+            while True:
+                user_input = input(f"Current stock is {items["Stock"]}. What do you want to change it to?")
+                if not user_input.isdigit():
+                    print("That is not a positive whole number.")
+                    continue
+                items["Stock"] = int(user_input)
+                break
+            break
+    if not exists_flag:
+        print("Product not found, returning to menu...")
+            
     return inventory
 
 
@@ -152,7 +179,9 @@ def main():
                 inventory = add_product(inventory)
                 print("\n")
             case 3:
-                pass
+                print("\n")
+                inventory = update_product_stock(inventory)
+                print("\n")
             case 4:
                 pass
             case 5:
