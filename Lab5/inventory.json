@@ -1,0 +1,28 @@
+{
+    "items": [
+        {
+            "ID": "P1",
+            "Name": "Laptop",
+            "Price": 1440.25,
+            "Stock": 50
+        },
+        {
+            "ID": "P2",
+            "Name": "Logitech Mice",
+            "Price": 120,
+            "Stock": 12
+        },
+        {
+            "ID": "P3",
+            "Name": "Keyboard",
+            "Price": 255.5,
+            "Stock": 25
+        },
+        {
+            "ID": "P4",
+            "Name": "Headset",
+            "Price": 125.0,
+            "Stock": 2
+        }
+    ]
+}

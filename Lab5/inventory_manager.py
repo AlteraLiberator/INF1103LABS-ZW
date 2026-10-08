@@ -52,7 +52,7 @@ def display_product(inventory):
 
         for item in inventory["items"]:
             print(
-                f"ID: {item["ID"]} | Name: {item["Name"]} | Price: ${item["Price"]:.2f} | Current stock: {item["Stock"]}"
+                f"ID: {item['ID']} | Name: {item['Name']} | Price: ${item['Price']:.2f} | Current stock: {item['Stock']}"
             )
     return True
 
@@ -133,7 +133,7 @@ def update_product_stock(inventory):
             exists_flag = True
             while True:
                 user_input = input(
-                    f"Current stock is {items["Stock"]}. What do you want to change it to?"
+                    f"Current stock is {items['Stock']}. What do you want to change it to?"
                 )
                 if not user_input.isdigit():
                     print("That is not a positive whole number.")
