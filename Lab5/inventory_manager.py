@@ -115,15 +115,17 @@ def update_product_stock(inventory):
 
     user_input = input("Enter product ID or -1 to exit: ")
     exists_flag = False
-    
+
     if exit_flag(user_input):
         return inventory
-    
+
     for items in inventory["items"]:
         if items["ID"] == user_input:
             exists_flag = True
             while True:
-                user_input = input(f"Current stock is {items["Stock"]}. What do you want to change it to?")
+                user_input = input(
+                    f"Current stock is {items["Stock"]}. What do you want to change it to?"
+                )
                 if not user_input.isdigit():
                     print("That is not a positive whole number.")
                     continue
@@ -132,8 +134,36 @@ def update_product_stock(inventory):
             break
     if not exists_flag:
         print("Product not found, returning to menu...")
-            
+
     return inventory
+
+
+def search_product(inventory):
+
+    user_input = input("Enter product ID or -1 to exit: ")
+    exists_flag = False
+
+    if exit_flag(user_input):
+        return inventory
+
+    for items in inventory["items"]:
+        if items["ID"] == user_input:
+            exists_flag = True
+            print(f"""
+Product Found!
+-----------------------------
+ID: {items["ID"]}
+Name: {items["Name"]}
+Price: {items["Price"]}
+Stock: {{items["Stock"]}}
+-----------------------------
+                  """)
+            break
+
+    if not exists_flag:
+        print("Product not found, returning to menu...")
+
+    return True
 
 
 def main():
@@ -155,12 +185,12 @@ def main():
         # Print options menu
         print(("-" * 7) + "MENU" + ("-" * 7))
         print("""
-              1. Display all products
-              2. Add product
-              3. Update stock
-              4. Search product
-              5. Save Inventory
-              6. Exit (Autosaves)
+1. Display all products
+2. Add product
+3. Update stock
+4. Search product
+5. Save Inventory
+6. Exit (Autosaves)
               """)
         print("-" * 18 + "\n")
 
@@ -183,7 +213,9 @@ def main():
                 inventory = update_product_stock(inventory)
                 print("\n")
             case 4:
-                pass
+                print("\n")
+                search_product(inventory)
+                print("\n")
             case 5:
                 pass
             case 6:
