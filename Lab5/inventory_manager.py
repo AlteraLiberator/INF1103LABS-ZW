@@ -28,6 +28,87 @@ def get_inventory(default):
         return default
 
 
+# Product functions
+def display_product(inventory):
+    if len(inventory["items"]) == 0:
+        print("No items in inventory!")
+    else:
+
+        for item in inventory["items"]:
+            print(
+                f"ID: {item["ID"]} | Name: {item["Name"]} | Price: ${item["Price"]:.2f} | Current stock: {item["Stock"]}"
+            )
+    return True
+
+
+def add_product(inventory):
+
+    def exit_flag(data):
+        if data == "-1":
+            return True
+        return False
+
+    item = {"ID": "", "Name": "", "Price": 0, "Stock": 0}
+
+    while True:
+        user_input = input("Enter product ID, or -1 to exit:")
+
+        if exit_flag(user_input):
+            break
+
+        exists_flag = False
+
+        for items in inventory["items"]:
+            if items["ID"] == user_input:
+                exists_flag = True
+                break
+
+        if exists_flag:
+            print("Product already exists!")
+            continue
+        else:
+            item["ID"] = user_input
+
+            # User enters product name
+            user_input = input("Enter Product Name, or -1 to exit:")
+            if exit_flag(user_input):
+                break
+            item["Name"] = user_input
+
+            while True:
+                user_input = input("Enter Product Price, or -1 to exit:")
+                if exit_flag(user_input):
+                    break
+                try:
+                    item["Price"] = float(user_input)
+                    break
+                except ValueError:
+                    print("Invalid price!")
+
+            # To exit outer loop if user entered 0 from the price loop
+            if exit_flag(user_input):
+                break
+
+            while True:
+                user_input = input("Enter Product Stock, or -1 to exit:")
+                if exit_flag(user_input):
+                    break
+                try:
+                    item["Stock"] = int(user_input)
+                    break
+                except ValueError:
+                    print("Invalid price!")
+
+            # To exit outer loop if user entered 0 from the stock loop
+            if exit_flag(user_input):
+                break
+            
+            inventory["items"].append(item)
+            break
+
+    return inventory
+
+
 def main():
 
     # Define variables
@@ -41,11 +122,11 @@ def main():
 
     # Get Inventory
     inventory = get_inventory(inventory)
-    
+
     while True:
-        
+
         # Print options menu
-        print(("-"*7) + "MENU" + ("-"*7))
+        print(("-" * 7) + "MENU" + ("-" * 7))
         print("""
               1. Display all products
               2. Add product
@@ -54,18 +135,22 @@ def main():
               5. Save Inventory
               6. Exit (Autosaves)
               """)
-        print("-"*18 + "\n")
-        
+        print("-" * 18 + "\n")
+
         user_input = input("Enter option: ")
-        
+
         while not user_input.isdigit():
             user_input = input("Invalid entry, try again: ")
-        
+
         match int(user_input):
             case 1:
-                pass
-            case 2: 
-                pass
+                print("\n")
+                display_product(inventory)
+                print("\n")
+            case 2:
+                print("\n")
+                inventory = add_product(inventory)
+                print("\n")
             case 3:
                 pass
             case 4:
@@ -74,10 +159,10 @@ def main():
                 pass
             case 6:
                 break
-            case _: # Default case
+            case _:  # Default case
                 print("No matching option found, returning to menu")
-        
-        
+
+    print("Exiting app...")
 
     return 0
 
