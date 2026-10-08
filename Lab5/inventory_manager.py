@@ -34,6 +34,15 @@ def get_inventory(default):
 
         return default
 
+def save_inventory(inventory):
+    try:
+        with open(INVENTORY_FILE, "w") as inventory_file:
+            json.dump(inventory, inventory_file, indent=4)
+            
+        print("Inventory saved!")
+    except Exception as e:
+        print(f"Error occurred: {e}\nUnable to save file.")
+        
 
 # Product functions
 def display_product(inventory):
@@ -99,7 +108,7 @@ def add_product(inventory):
                     item["Stock"] = int(user_input)
                     break
                 except ValueError:
-                    print("Invalid price!")
+                    print("Invalid stock!")
 
             # To exit outer loop if user entered 0 from the stock loop
             if exit_flag(user_input):
@@ -217,13 +226,16 @@ def main():
                 search_product(inventory)
                 print("\n")
             case 5:
-                pass
+                print("\n")
+                save_inventory(inventory)
+                print("\n")
             case 6:
                 break
             case _:  # Default case
                 print("No matching option found, returning to menu")
 
-    print("Exiting app...")
+    print("Exiting app and saving inventory...")
+    save_inventory(inventory)
 
     return 0
 
