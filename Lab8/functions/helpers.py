@@ -1,3 +1,12 @@
-def number_checker(value):
+def is_number(value) -> bool:
     if not value.isdigit():
-        raise ValueError("Not a number!")
+        return False
+    return True
+
+
+def is_float(value) -> bool:
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False

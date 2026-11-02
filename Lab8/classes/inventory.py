@@ -1,11 +1,17 @@
 from typing import Literal
-from functools import singledispatchmethod
 from .product import Product
 
 
 class Inventory:
-    def __init__(self, product_list=[]) -> None:
-        self._product_list = [] if product_list == [] else product_list
+    def __init__(self, _product_list=[]) -> None:
+        self._product_list = _product_list
+        
+    @classmethod
+    def from_dict(cls, data: dict) -> Inventory:
+        product_list_data = data.get("_product_list", [])
+        product_list = [Product.from_dict(product_data) for product_data in product_list_data]
+        print(product_list)
+        return cls(product_list)
 
     @property
     def product_list(self) -> list[Product]:
@@ -15,12 +21,34 @@ class Inventory:
     def product_list(self, value) -> None:
         self._product_list = value
 
+    def get_methods(self):
+        return [
+            {
+                "display_string": "Display all products",
+                "method": self.print_all_products,
+                "fields":[]
+            },
+            {
+                "display_string": "Search for product",
+                "method": self.search_product_list_by_id,
+                "fields":["product_id"]
+            },
+            {
+                "display_string": "Add new product",
+                "method": self.add_product,
+            },
+            {
+                "display_string": "Add stock to product",
+                "method": self.add_to_product,
+            },
+        ]
+
     def search_product_list_by_id(self, product_id: str) -> Product | Literal[False]:
         for product in self.product_list:
             if product_id == product.productid:
                 return product
         return False
-
+    
     def add_product(self, product: Product) -> None:
         duplicate = self.search_product_list_by_id(product.productid)
         if isinstance(duplicate, Product):
@@ -58,12 +86,12 @@ class Inventory:
             print(product[1])
             return False
 
-        print(product.display_information())
+        print(product.return_display_information())
         return True
 
     def print_all_products(self) -> None:
         print("""ITEMS IN INVENTORY""")
         for product in self.product_list:
-            print(product.display_information())
+            print(product.return_display_information())
 
         return
