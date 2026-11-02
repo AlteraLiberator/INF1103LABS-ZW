@@ -2,7 +2,6 @@ from pathlib import Path
 
 from classes.filereader import FileHandler
 from classes.inventorymenu import InventoryMenu
-from functions.helpers import number_checker
 
 
 def main():

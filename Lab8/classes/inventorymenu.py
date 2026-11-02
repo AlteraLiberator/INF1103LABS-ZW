@@ -25,6 +25,10 @@ class InventoryMenu(Menu):
                 "method": self.view_inventory,
             },
             {
+                "display_string": "Search Item",
+                "method": self.search_item,
+            },
+            {
                 "display_string": "Save Data",
                 "method": self.save_data,
             },
@@ -67,12 +71,22 @@ class InventoryMenu(Menu):
 
         return
 
+    def search_item(self) -> None:
+        product_id = input("Enter product ID to search: ")
+        product = self.inventory.search_product_list_by_id(product_id)
+        if isinstance(product, Product):
+            print("Product found:")
+            print(product.return_display_information())
+        else:
+            print(f"Product with ID {product_id} not found.")
+        return
+
     def view_inventory(self) -> None:
         print("Current Inventory:")
         for product in self.inventory.product_list:
             print(product.return_display_information())
         return
-    
+
     def save_data(self, file_reader: FileHandler, file_location: Path) -> None:
         try:
             print(self.inventory.product_list)
@@ -80,5 +94,3 @@ class InventoryMenu(Menu):
             print("Data saved successfully.")
         except Exception as e:
             print(f"An error occurred while saving data: {e}")
-        
-        

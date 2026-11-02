@@ -1,5 +1,4 @@
 from typing import Any
-from .inventory import Inventory
 from collections.abc import Callable
 
 
