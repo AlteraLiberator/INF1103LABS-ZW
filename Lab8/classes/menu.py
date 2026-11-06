@@ -10,7 +10,6 @@ class Menu:
                 "method": None,
             }
         ]
-
     @property
     def menu_options(self) -> list[dict]:
         return self._menu_options
