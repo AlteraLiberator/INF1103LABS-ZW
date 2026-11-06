@@ -22,7 +22,7 @@ def main():
             if item["display_string"] == "Quit":
                 if user_option == str(inventory_menu.menu_options.index(item)):
                     print(inventory_menu.exit_message())
-                    file_manager.inventory_to_file(INVENTORY_FILE, inventory)
+                    inventory_menu.save_data(file_manager, INVENTORY_FILE)
                     return
 
             elif item["display_string"] == "Save Data":

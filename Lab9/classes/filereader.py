@@ -20,11 +20,7 @@ class FileHandler:
         except FileNotFoundError:
             return Inventory()
 
-    def inventory_to_file(self, file_location: Path, inventory: Inventory):
-        try:
-            with open(file_location, "w", encoding="utf-8") as file:
-                json.dump(inventory.__dict__, file, default=lambda o: o.__dict__, indent=4)
-                return True
-
-        except Exception:
-            return False
+    def inventory_to_file(self, file_location: Path, inventory: Inventory) -> bool:
+        with open(file_location, "w", encoding="utf-8") as file:
+            json.dump(inventory.__dict__, file, default=lambda o: o.__dict__, indent=4)
+        return True

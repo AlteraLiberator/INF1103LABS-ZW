@@ -108,8 +108,7 @@ class InventoryMenu(Menu):
 
     def save_data(self, file_reader: FileHandler, file_location: Path) -> None:
         try:
-            print(self.inventory.product_list)
             file_reader.inventory_to_file(file_location, self.inventory)
             print("Data saved successfully.")
-        except Exception as e:
+        except (OSError, TypeError) as e:
             print(f"An error occurred while saving data: {e}")

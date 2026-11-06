@@ -19,6 +19,15 @@ class Product:
         name = data.get("_name", "")
         price = data.get("_price", 0.0)
         stock = data.get("_stock", 0)
+
+        if "weight" in data:
+            from .physicalproduct import PhysicalProduct
+            return PhysicalProduct(productid, name, price, stock, data["weight"])
+
+        if "file_size" in data:
+            from .digitalproduct import DigitalProduct
+            return DigitalProduct(productid, name, price, stock, data["file_size"])
+
         return cls(productid, name, price, stock)
 
     @property
