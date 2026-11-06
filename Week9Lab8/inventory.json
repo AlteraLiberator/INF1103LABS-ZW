@@ -4,7 +4,8 @@
             "_productid": "P1",
             "_name": "AAA",
             "_price": 122.0,
-            "_stock": 1
+            "_stock": 1,
+            "_weight": 1.0
         }
     ]
 }

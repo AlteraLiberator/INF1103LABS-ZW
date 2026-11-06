@@ -1,11 +1,11 @@
 from __future__ import annotations
 from dataclasses import dataclass
-
+from abc import ABC, abstractmethod
 from functions.helpers import is_number, is_float
 
 
 @dataclass
-class Product:
+class Product(ABC):
 
     def __init__(self, productid: str, name: str, price: float, stock: int) -> None:
         self._productid = productid
@@ -77,3 +77,7 @@ class Product:
             Stock: {self.stock}"""
 
         return output_string
+    
+    @abstractmethod
+    def get_fulfilment_information(self) -> str:
+        pass
