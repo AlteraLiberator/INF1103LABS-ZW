@@ -1,8 +1,9 @@
+
 from __future__ import annotations
+
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from functions.helpers import is_number, is_float
-
 
 @dataclass
 class Product(ABC):
@@ -15,21 +16,16 @@ class Product(ABC):
         
     @classmethod
     def from_dict(cls, data: dict) -> Product:
-        productid = data.get("_productid", "")
-        name = data.get("_name", "")
-        price = data.get("_price", 0.0)
-        stock = data.get("_stock", 0)
-
-        if "weight" in data:
+        if "_weight" in data or "weight" in data:
             from .physicalproduct import PhysicalProduct
-            return PhysicalProduct(productid, name, price, stock, data["weight"])
 
-        if "file_size" in data:
+            return PhysicalProduct.from_dict(data)
+        if "_file_size" in data or "file_size" in data:
             from .digitalproduct import DigitalProduct
-            return DigitalProduct(productid, name, price, stock, data["file_size"])
 
-        return cls(productid, name, price, stock)
-
+            return DigitalProduct.from_dict(data)
+        raise ValueError("Product data must include a weight or file_size attribute")
+        
     @property
     def productid(self)-> str:
         return self._productid

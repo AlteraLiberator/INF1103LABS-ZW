@@ -13,7 +13,6 @@ class Inventory:
     def from_dict(cls, data: dict) -> Inventory:
         product_list_data = data.get("_product_list", [])
         product_list = [Product.from_dict(product_data) for product_data in product_list_data]
-        print(product_list)
         return cls(product_list)
 
     @property

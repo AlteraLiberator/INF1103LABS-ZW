@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .product import Product
 from .canbeshipped import CanBeShipped
 class PhysicalProduct(Product, CanBeShipped):
@@ -12,6 +14,15 @@ class PhysicalProduct(Product, CanBeShipped):
     @weight.setter
     def weight(self, value):
         self._weight = value
+        
+    @classmethod
+    def from_dict(cls, data: dict) -> PhysicalProduct:
+        productid = data.get("_productid", "")
+        name = data.get("_name", "")
+        price = data.get("_price", 0.0)
+        stock = data.get("_stock", 0)
+        weight = data.get("_weight", data.get("weight", 0.0))
+        return cls(productid, name, price, stock, weight)
 
     def return_display_information(self) -> str:
         output_string = super().return_display_information()

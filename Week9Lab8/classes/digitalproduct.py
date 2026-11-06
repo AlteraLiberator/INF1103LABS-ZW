@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .product import Product
 
 
@@ -13,6 +15,15 @@ class DigitalProduct(Product):
     @file_size.setter
     def file_size(self, value):
         self._file_size = value
+        
+    @classmethod
+    def from_dict(cls, data: dict) -> DigitalProduct:
+        productid = data.get("_productid", "")
+        name = data.get("_name", "")
+        price = data.get("_price", 0.0)
+        stock = data.get("_stock", 0)
+        file_size = data.get("_file_size", data.get("file_size", 0.0))
+        return cls(productid, name, price, stock, file_size)
 
     def return_display_information(self) -> str:
         output_string = super().return_display_information()
