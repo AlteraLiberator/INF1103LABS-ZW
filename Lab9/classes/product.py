@@ -61,10 +61,10 @@ class Product:
         self.stock += input
 
     def return_display_information(self) -> str:
-        output_string = f"""==================
+        output_string = f"""
             Product ID: {self.productid}
             Name: {self.name}
             Price: {self.price}
-            Stock: {self.stock}
-=================="""
+            Stock: {self.stock}"""
+
         return output_string

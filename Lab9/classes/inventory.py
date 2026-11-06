@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Any, Literal
 from .product import Product
 from .physicalproduct import PhysicalProduct
+from .digitalproduct import DigitalProduct
 from functools import singledispatchmethod
 
 class Inventory:
@@ -75,6 +76,18 @@ class Inventory:
     def _(self, product: PhysicalProduct) -> None:
         duplicate = self.search_product_list_by_id(product.productid)
         if isinstance(duplicate, PhysicalProduct):
+            duplicate.stock += product.stock
+            return
+        
+        if isinstance(duplicate, Product):
+            raise ValueError("Product ID already exists as a different product type.")
+        self._product_list.append(product)
+        return
+    
+    @add_product.register
+    def _(self, product: DigitalProduct) -> None:
+        duplicate = self.search_product_list_by_id(product.productid)
+        if isinstance(duplicate, DigitalProduct):
             duplicate.stock += product.stock
             return
         

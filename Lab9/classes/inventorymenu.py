@@ -2,6 +2,7 @@ from .menu import Menu
 from .inventory import Inventory
 from .product import Product
 from .physicalproduct import PhysicalProduct
+from .digitalproduct import DigitalProduct
 from .filereader import FileHandler
 from functions.helpers import is_number, is_float
 
@@ -64,7 +65,17 @@ class InventoryMenu(Menu):
             while not is_float(weight):
                 print("Invalid weight. Please enter a valid number.")
                 weight = input("Enter product weight: ")
-            product = PhysicalProduct(product_id, name, float(price), int(stock), float(weight))
+            product = PhysicalProduct(
+                product_id, name, float(price), int(stock), float(weight)
+            )
+        elif productType == "digital":
+            file_size = input("Enter product file size (MB): ")
+            while not is_float(file_size):
+                print("Invalid file size. Please enter a valid number.")
+                file_size = input("Enter product file size (MB): ")
+            product = DigitalProduct(
+                product_id, name, float(price), int(stock), float(file_size)
+            )
         else:
             product = Product(product_id, name, float(price), int(stock))
         self.inventory.add_product(product)

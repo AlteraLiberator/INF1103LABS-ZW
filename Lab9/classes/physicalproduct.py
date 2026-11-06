@@ -9,11 +9,6 @@ class PhysicalProduct(Product):
         return self.weight
     
     def return_display_information(self) -> str:
-        output_string = f"""==================
-            Product ID: {self.productid}
-            Name: {self.name}
-            Price: {self.price}
-            Stock: {self.stock}
-            Weight: {self.weight}
-=================="""
+        output_string = super().return_display_information()
+        output_string += f"\nWeight: {self.weight}"
         return output_string

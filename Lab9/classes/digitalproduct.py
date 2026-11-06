@@ -7,11 +7,6 @@ class DigitalProduct(Product):
         self.file_size = file_size
 
     def return_display_information(self) -> str:
-        output_string = f"""==================
-            Product ID: {self.productid}
-            Name: {self.name}
-            Price: {self.price}
-            Stock: {self.stock}
-            File Size: {self.file_size} MB
-=================="""
+        output_string = super().return_display_information()
+        output_string += f"\nFile Size: {self.file_size} MB"
         return output_string
