@@ -1,3 +1,5 @@
+from typing import Union
+
 from .menu import Menu
 from .inventory import Inventory
 from .product import Product
@@ -59,25 +61,29 @@ class InventoryMenu(Menu):
         while not is_number(stock):
             print("Invalid stock. Please enter a valid number.")
             stock = input("Enter product stock: ")
-        productType = input("Enter product type (physical/digital): ").strip().lower()
-        if productType == "physical":
-            weight = input("Enter product weight: ")
-            while not is_float(weight):
-                print("Invalid weight. Please enter a valid number.")
+        while True:
+            productType = input("Enter product type (physical/digital): ").strip().lower()
+            if productType == "physical":
                 weight = input("Enter product weight: ")
-            product = PhysicalProduct(
-                product_id, name, float(price), int(stock), float(weight)
-            )
-        elif productType == "digital":
-            file_size = input("Enter product file size (MB): ")
-            while not is_float(file_size):
-                print("Invalid file size. Please enter a valid number.")
+                while not is_float(weight):
+                    print("Invalid weight. Please enter a valid number.")
+                    weight = input("Enter product weight: ")
+                product = PhysicalProduct(
+                    product_id, name, float(price), int(stock), float(weight)
+                )
+                break
+            elif productType == "digital":
                 file_size = input("Enter product file size (MB): ")
-            product = DigitalProduct(
-                product_id, name, float(price), int(stock), float(file_size)
-            )
-        else:
-            product = Product(product_id, name, float(price), int(stock))
+                while not is_float(file_size):
+                    print("Invalid file size. Please enter a valid number.")
+                    file_size = input("Enter product file size (MB): ")
+                product = DigitalProduct(
+                    product_id, name, float(price), int(stock), float(file_size)
+                )
+                break
+            else:
+                print("Invalid product type. Please enter 'physical' or 'digital'.")
+
         self.inventory.add_product(product)
         pass
 
@@ -90,12 +96,17 @@ class InventoryMenu(Menu):
 
         return
 
+    @staticmethod
+    def show_item(product: Union[DigitalProduct, PhysicalProduct]) -> str:
+        return f"{product.return_display_information()}\n{product.get_fulfilment_information()}"
+
     def search_item(self) -> None:
         product_id = input("Enter product ID to search: ")
         product = self.inventory.search_product_list_by_id(product_id)
         if isinstance(product, Product):
             print("Product found:")
             print(product.return_display_information())
+            print(product.get_fulfilment_information())
         else:
             print(f"Product with ID {product_id} not found.")
         return
@@ -103,7 +114,7 @@ class InventoryMenu(Menu):
     def view_inventory(self) -> None:
         print("Current Inventory:")
         for product in self.inventory.product_list:
-            print(product.return_display_information())
+            print(product.return_display_information(), "\n", product.get_fulfilment_information())
         return
 
     def save_data(self, file_reader: FileHandler, file_location: Path) -> None:

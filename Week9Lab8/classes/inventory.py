@@ -64,15 +64,6 @@ class Inventory:
         raise NotImplementedError("Unsupported product type")
     
     @add_product.register
-    def _(self, product: Product) -> None:
-        duplicate = self.search_product_list_by_id(product.productid)
-        if isinstance(duplicate, Product):
-            duplicate.stock += product.stock
-            return
-        self._product_list.append(product)
-        return
-    
-    @add_product.register
     def _(self, product: PhysicalProduct) -> None:
         duplicate = self.search_product_list_by_id(product.productid)
         if isinstance(duplicate, PhysicalProduct):

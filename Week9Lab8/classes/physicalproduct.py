@@ -18,6 +18,9 @@ class PhysicalProduct(Product, CanBeShipped):
         output_string += f"\nWeight: {self._weight}"
         return output_string
     
+    def get_fulfilment_information(self) -> str:
+        return "Product must be shipped to customer."
+    
     def can_be_shipped(self) -> bool:
         return True
     

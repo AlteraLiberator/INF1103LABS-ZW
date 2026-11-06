@@ -18,3 +18,6 @@ class DigitalProduct(Product):
         output_string = super().return_display_information()
         output_string += f"\nFile Size: {self._file_size} MB"
         return output_string
+    
+    def get_fulfilment_information(self) -> str:
+        return "Product can be downloaded by customer."
